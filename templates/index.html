@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .card {
+            margin: 20px auto;
+            float: none;
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+
+        .card .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card .card-text {
+            font-size: 1.2rem;
+        }
+
+        .star {
+            color: yellow;
+            text-shadow: 1px 1px 1px black;
+            font-size: 1.5rem;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="mt-5">
+            <input type="text" id="review" class="form-control" placeholder="Write a comment...">
+            <button id="analyze" class="btn btn-primary mt-3">Analyze</button>
+        </div>
+        <div id="comments" class="mt-5"></div>
+    </div>
+    <script>
+        $(document).ready(function() {
+    $('#analyze').click(function() {
+        var review = $('#review').val();
+        $.ajax({
+            url: '/',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ review: review }),
+            dataType: 'json',
+            success: function(sentiment) {
+                $('#comments').append(
+                    `<div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">${review}</h5>
+                            <p class="card-text">${'★'.repeat(Math.round(sentiment.sentiment)) + '☆'.repeat(5 - Math.round(sentiment.sentiment))}</p>
+                        </div>
+                    </div>`
+                );
+                $('#review').val('');
+            }
+        });
+    });
+});
+
+    </script>
+    
+</body>
+</html>
